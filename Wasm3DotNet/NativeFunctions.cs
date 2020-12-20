@@ -40,8 +40,9 @@ namespace Wasm3DotNet
         [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstantStringMarshaler))]
         public static extern string m3_LoadModule(IM3Runtime runtime, IM3Module module);
 
-        //[DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
-        //public static extern string m3_LinkRawFunction
+        [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstantStringMarshaler))]
+        public static extern string m3_LinkRawFunction(IM3Module module, string moduleName, string functionName, string signature, M3RawCall function);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstantStringMarshaler))]

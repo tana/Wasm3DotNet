@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="test.wat" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wasm3DotNet\Wasm3DotNet.csproj">

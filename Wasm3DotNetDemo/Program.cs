@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
 using Wasm3DotNet;
+using Wasm3DotNet.Wrapper;
 
 namespace Wasm3DotNetDemo
 {
@@ -15,42 +16,21 @@ namespace Wasm3DotNetDemo
         {
             NativeFunctions.m3_PrintM3Info();
 
-            using (var environment = NativeFunctions.m3_NewEnvironment())
-            using (var runtime = NativeFunctions.m3_NewRuntime(environment, 65536, IntPtr.Zero))
+            using (var environment = new Wasm3DotNet.Wrapper.Environment())
+            using (var runtime = new Runtime(environment))
             {
-                NativeFunctions.m3_PrintRuntimeInfo(runtime);
-
-                string result;
-
-                IM3Module module;
+                runtime.PrintRuntimeInfo();
 
                 byte[] wasmData = File.ReadAllBytes(@"../../test.wasm");
-                result = NativeFunctions.m3_ParseModule(environment, out module, wasmData, (uint)wasmData.Length);
-                if (result != null)
-                {
-                    throw new Exception(result);
-                }
+                var module = runtime.ParseModule(wasmData);
 
-                result = NativeFunctions.m3_LoadModule(runtime, module);
-                if (result != null)
-                {
-                    throw new Exception(result);
-                }
+                runtime.LoadModule(module);
 
-                result = NativeFunctions.m3_LinkRawFunction(module, "externals", "print_add", "i(ii)", Output);
-                if (result != null)
-                {
-                    throw new Exception(result);
-                }
+                module.LinkRawFunction("externals", "print_add", "i(ii)", Output);
 
-                IM3Function function;
-                result = NativeFunctions.m3_FindFunction(out function, runtime, "test");
-                if (result != null)
-                {
-                    throw new Exception(result);
-                }
+                var func = runtime.FindFunction("test");
 
-                result = NativeFunctions.m3_CallWithArgs(function, 1, new[] { "10" });
+                var result = func.Call(new[] { "10" });
                 Console.WriteLine(result);
             }
 

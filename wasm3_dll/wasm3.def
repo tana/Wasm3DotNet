@@ -1,0 +1,21 @@
+LIBRARY wasm3
+EXPORTS
+	m3_NewEnvironment
+	m3_FreeEnvironment
+	m3_NewRuntime
+	m3_FreeRuntime
+	m3_GetMemory
+	m3_ParseModule
+	m3_FreeModule
+	m3_LoadModule
+	m3_LinkRawFunction
+	m3_LinkRawFunctionEx
+	m3_Yield
+	m3_FindFunction
+	m3_Call
+	m3_CallWithArgs
+	m3_GetErrorInfo
+	m3_ResetErrorInfo
+	m3_PrintRuntimeInfo
+	m3_PrintM3Info
+	m3_PrintProfilerInfo

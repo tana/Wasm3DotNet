@@ -30,8 +30,7 @@ namespace Wasm3DotNetDemo
 
                 var func = runtime.FindFunction("test");
 
-                var result = func.Call(new[] { "10" });
-                Console.WriteLine(result);
+                func.Call(10);
             }
 
             Console.ReadKey();

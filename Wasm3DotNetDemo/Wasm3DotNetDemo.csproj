@@ -58,7 +58,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="wasm3.dll">
+    <Content Include="..\wasm3_dll\Debug\wasm3.dll">
+      <Link>wasm3.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

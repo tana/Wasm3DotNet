@@ -18,5 +18,6 @@ EXPORTS
 	m3_GetRetType
 	m3_Call
 	m3_CallArgv
+	m3_GetResults
 	m3_GetErrorInfo
 	m3_ResetErrorInfo

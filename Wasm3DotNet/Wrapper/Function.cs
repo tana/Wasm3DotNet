@@ -9,15 +9,17 @@ namespace Wasm3DotNet.Wrapper
     {
         internal IM3Function Handle;
         public readonly int ArgCount;
+        public readonly int RetCount;
 
         internal Function(IM3Function handle)
         {
             Handle = handle;
 
             ArgCount = (int)NativeFunctions.m3_GetArgCount(Handle);
+            RetCount = (int)NativeFunctions.m3_GetRetCount(Handle);
         }
 
-        public unsafe void Call(params object[] args)
+        public unsafe object[] CallMultiValue(params object[] args)
         {
             // Check number of arguments
             if (args.Length != ArgCount)
@@ -25,17 +27,16 @@ namespace Wasm3DotNet.Wrapper
                 throw new ArgumentException($"Wrong number of arguments: expected ${ArgCount}, but got ${args.Length}");
             }
 
-            const int bytesPerArg = 8;
+            const int bytesPerValue = 8;
 
-            var argPtrs = new IntPtr[bytesPerArg * ArgCount];
+            var argPtrs = new IntPtr[ArgCount];
             // Allocate a buffer to store arguments
-            var buf = stackalloc byte[bytesPerArg * ArgCount];
+            var buf = stackalloc byte[bytesPerValue * ArgCount];
 
-            var i = 0;
-            foreach (var arg in args)
+            for (int i = 0; i < ArgCount; i++)
             {
-                var ptr = buf + bytesPerArg * i;
-                switch (arg)
+                var ptr = buf + bytesPerValue * i;
+                switch (args[i])
                 {
                     case int intArg:
                         *(int*)ptr = intArg;
@@ -50,10 +51,9 @@ namespace Wasm3DotNet.Wrapper
                         *(double*)ptr = doubleArg;
                         break;
                     default:
-                        throw new ArgumentException($"Argument #{i} has unsupported type: {arg.GetType()}");
+                        throw new ArgumentException($"Argument #{i} has unsupported type: {args[i].GetType()}");
                 }
                 argPtrs[i] = (IntPtr)ptr;
-                i++;
             }
 
             var result = NativeFunctions.m3_Call(Handle, (uint)ArgCount, argPtrs);
@@ -62,9 +62,52 @@ namespace Wasm3DotNet.Wrapper
                 throw new Wasm3Exception(result);
             }
 
-            // TODO: currently, return value is not returned because it is not easy.
-            // Reading result of a WASM function requires accessing stack using internal knowledge of a runtime struct.
-            // See: https://github.com/wasm3/wasm3/blob/824ce5d9e11b800d823703c556732f30eb80a940/platforms/cpp/wasm3_cpp/include/wasm3_cpp.h#L316
+            // Allocate a buffer to store returned values
+            var retBuf = stackalloc byte[bytesPerValue * RetCount];
+            var retPtrs = new IntPtr[RetCount];
+            for (int i = 0; i < RetCount; i++)
+            {
+                retPtrs[i] = (IntPtr)(retBuf + bytesPerValue * i);
+            }
+
+            // Retrieve returned values
+            result = NativeFunctions.m3_GetResults(Handle, (uint)RetCount, retPtrs);
+            if (result != null)
+            {
+                throw new Wasm3Exception(result);
+            }
+
+            var returns = new object[RetCount];
+            for (int i = 0; i < RetCount; i++)
+            {
+                var ptr = retPtrs[i];
+                var retType = NativeFunctions.m3_GetRetType(Handle, (uint)i);
+                switch (retType)
+                {
+                    case M3ValueType.I32:
+                        returns[i] = *(int*)ptr;
+                        break;
+                    case M3ValueType.I64:
+                        returns[i] = *(long*)ptr;
+                        break;
+                    case M3ValueType.F32:
+                        returns[i] = *(float*)ptr;
+                        break;
+                    case M3ValueType.F64:
+                        returns[i] = *(double*)ptr;
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown return type: {retType}");
+                }
+            }
+
+            return returns;
+        }
+
+        public object Call(params object[] args)
+        {
+            var returns = CallMultiValue(args);
+            return (returns.Length >= 1) ? returns[0] : null;
         }
     }
 }

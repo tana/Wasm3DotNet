@@ -13,9 +13,6 @@ EXPORTS
 	m3_Yield
 	m3_FindFunction
 	m3_Call
-	m3_CallWithArgs
+	m3_CallArgv
 	m3_GetErrorInfo
 	m3_ResetErrorInfo
-	m3_PrintRuntimeInfo
-	m3_PrintM3Info
-	m3_PrintProfilerInfo

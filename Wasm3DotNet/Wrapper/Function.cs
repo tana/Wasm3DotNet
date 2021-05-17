@@ -16,7 +16,7 @@ namespace Wasm3DotNet.Wrapper
 
         public string CallWithArgs(string[] args)
         {
-            return NativeFunctions.m3_CallWithArgs(Handle, (uint)args.Length, args);
+            return NativeFunctions.m3_CallArgv(Handle, (uint)args.Length, args);
         }
 
         public void Call(params object[] args)

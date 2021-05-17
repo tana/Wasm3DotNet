@@ -170,6 +170,7 @@
     <ClInclude Include="wasm3\source\m3_exception.h" />
     <ClInclude Include="wasm3\source\m3_exec.h" />
     <ClInclude Include="wasm3\source\m3_exec_defs.h" />
+    <ClInclude Include="wasm3\source\m3_function.h" />
     <ClInclude Include="wasm3\source\m3_info.h" />
     <ClInclude Include="wasm3\source\m3_math_utils.h" />
     <ClInclude Include="wasm3\source\wasm3.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="wasm3\source\m3_emit.c" />
     <ClCompile Include="wasm3\source\m3_env.c" />
     <ClCompile Include="wasm3\source\m3_exec.c" />
+    <ClCompile Include="wasm3\source\m3_function.c" />
     <ClCompile Include="wasm3\source\m3_info.c" />
     <ClCompile Include="wasm3\source\m3_module.c" />
     <ClCompile Include="wasm3\source\m3_optimize.c" />

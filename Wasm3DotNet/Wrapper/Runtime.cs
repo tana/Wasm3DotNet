@@ -21,11 +21,6 @@ namespace Wasm3DotNet.Wrapper
             Handle.Dispose();
         }
 
-        public void PrintRuntimeInfo()
-        {
-            NativeFunctions.m3_PrintRuntimeInfo(Handle);
-        }
-
         public Module ParseModule(byte[] wasm)
         {
             IM3Module moduleHandle;

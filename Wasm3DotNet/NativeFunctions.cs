@@ -56,21 +56,12 @@ namespace Wasm3DotNet
         public static extern string m3_Call(IM3Function function);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
-        public static extern string m3_CallWithArgs(IM3Function function, uint argc, string[] argv);
+        public static extern string m3_CallArgv(IM3Function function, uint argc, string[] argv);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
         public static extern void m3_GetErrorInfo(IM3Runtime runtime, out M3ErrorInfo info);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
         public static extern void m3_ResetErrorInfo(IM3Runtime runtime);
-
-        [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void m3_PrintRuntimeInfo(IM3Runtime runtime);
-
-        [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void m3_PrintM3Info();
-
-        [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void m3_PrintProfilerInfo();
     }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
-using Wasm3DotNet;
 using Wasm3DotNet.Wrapper;
 
 namespace Wasm3DotNetDemo
@@ -14,13 +13,9 @@ namespace Wasm3DotNetDemo
     {
         static void Main(string[] args)
         {
-            NativeFunctions.m3_PrintM3Info();
-
             using (var environment = new Wasm3DotNet.Wrapper.Environment())
             using (var runtime = new Runtime(environment))
             {
-                runtime.PrintRuntimeInfo();
-
                 byte[] wasmData = File.ReadAllBytes(@"../../test.wasm");
                 var module = runtime.ParseModule(wasmData);
 

@@ -69,6 +69,9 @@
     <ClInclude Include="wasm3\source\wasm3.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="wasm3\source\m3_function.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="wasm3\source\m3_api_libc.c">
@@ -117,6 +120,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="wasm3\source\m3_parse.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="wasm3\source\m3_function.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

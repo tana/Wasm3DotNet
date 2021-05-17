@@ -31,12 +31,12 @@ namespace Wasm3DotNetDemo
             Console.ReadKey();
         }
 
-        static IntPtr Output(IntPtr runtime, IntPtr sp, IntPtr mem)
+        static IntPtr Output(IntPtr runtime, IntPtr ctx, IntPtr sp, IntPtr mem)
         {
             // Read values from WASM stack.
             // See: m3_api_defs.h in wasm3
-            var x = Marshal.ReadInt32(sp);
-            var y = Marshal.ReadInt32(sp, 8);
+            var x = Marshal.ReadInt32(sp, 8);
+            var y = Marshal.ReadInt32(sp, 16);
             Console.WriteLine($"x={x}, y={y}");
             // Write result to WASM stack.
             Marshal.WriteInt32(sp, x + y);

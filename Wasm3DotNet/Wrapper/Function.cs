@@ -8,52 +8,55 @@ namespace Wasm3DotNet.Wrapper
     public class Function
     {
         internal IM3Function Handle;
+        public readonly int ArgCount;
 
         internal Function(IM3Function handle)
         {
             Handle = handle;
+
+            ArgCount = (int)NativeFunctions.m3_GetArgCount(Handle);
         }
 
-        public string CallWithArgs(string[] args)
+        public unsafe void Call(params object[] args)
         {
-            return NativeFunctions.m3_CallArgv(Handle, (uint)args.Length, args);
-        }
+            // Check number of arguments
+            if (args.Length != ArgCount)
+            {
+                throw new ArgumentException($"Wrong number of arguments: expected ${ArgCount}, but got ${args.Length}");
+            }
 
-        public void Call(params object[] args)
-        {
-            var strArgs = new string[args.Length];
+            const int bytesPerArg = 8;
+
+            var argPtrs = new IntPtr[bytesPerArg * ArgCount];
+            // Allocate a buffer to store arguments
+            var buf = stackalloc byte[bytesPerArg * ArgCount];
+
             var i = 0;
-            var ifc = new IntFloatConverter();
-            var ldc = new LongDoubleConverter();
             foreach (var arg in args)
             {
-                // Convert arguments to "human-unfriendly" argument format
-                // See: Implementation of m3_CallWithArgs in m3_env.c
+                var ptr = buf + bytesPerArg * i;
                 switch (arg)
                 {
                     case int intArg:
-                        ifc.Int = intArg;
-                        strArgs[i] = ifc.UInt.ToString();
+                        *(int*)ptr = intArg;
                         break;
                     case long longArg:
-                        ldc.Long = longArg;
-                        strArgs[i] = ldc.ULong.ToString();
+                        *(long*)ptr = longArg;
                         break;
                     case float floatArg:
-                        ifc.Float = floatArg;
-                        strArgs[i] = ifc.UInt.ToString();
+                        *(float*)ptr = floatArg;
                         break;
                     case double doubleArg:
-                        ldc.Double = doubleArg;
-                        strArgs[i] = ldc.ULong.ToString();
+                        *(double*)ptr = doubleArg;
                         break;
                     default:
                         throw new ArgumentException($"Argument #{i} has unsupported type: {arg.GetType()}");
                 }
+                argPtrs[i] = (IntPtr)ptr;
                 i++;
             }
 
-            var result = CallWithArgs(strArgs);
+            var result = NativeFunctions.m3_Call(Handle, (uint)ArgCount, argPtrs);
             if (result != null)
             {
                 throw new Wasm3Exception(result);
@@ -62,28 +65,6 @@ namespace Wasm3DotNet.Wrapper
             // TODO: currently, return value is not returned because it is not easy.
             // Reading result of a WASM function requires accessing stack using internal knowledge of a runtime struct.
             // See: https://github.com/wasm3/wasm3/blob/824ce5d9e11b800d823703c556732f30eb80a940/platforms/cpp/wasm3_cpp/include/wasm3_cpp.h#L316
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        struct IntFloatConverter
-        {
-            [FieldOffset(0)]
-            public uint UInt;
-            [FieldOffset(0)]
-            public int Int;
-            [FieldOffset(0)]
-            public float Float;
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        struct LongDoubleConverter
-        {
-            [FieldOffset(0)]
-            public ulong ULong;
-            [FieldOffset(0)]
-            public long Long;
-            [FieldOffset(0)]
-            public double Double;
         }
     }
 }

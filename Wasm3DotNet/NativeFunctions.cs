@@ -53,9 +53,17 @@ namespace Wasm3DotNet
         public static extern string m3_FindFunction(out IM3Function function, IM3Runtime runtime, string functionName);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
-        public static extern string m3_Call(IM3Function function);
+        public static extern uint m3_GetArgCount(IM3Function function);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
+        public static extern uint m3_GetRetCount(IM3Function function);
+
+        [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstantStringMarshaler))]
+        public static extern string m3_Call(IM3Function function, uint argc, IntPtr[] argPtrs);
+
+        [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(ConstantStringMarshaler))]
         public static extern string m3_CallArgv(IM3Function function, uint argc, string[] argv);
 
         [DllImport("wasm3", CallingConvention = CallingConvention.Cdecl)]

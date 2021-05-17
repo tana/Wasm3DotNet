@@ -12,6 +12,10 @@ EXPORTS
 	m3_LinkRawFunctionEx
 	m3_Yield
 	m3_FindFunction
+	m3_GetArgCount
+	m3_GetRetCount
+	m3_GetArgType
+	m3_GetRetType
 	m3_Call
 	m3_CallArgv
 	m3_GetErrorInfo

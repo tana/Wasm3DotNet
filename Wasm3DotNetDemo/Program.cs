@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.InteropServices;
 using Wasm3DotNet.Wrapper;
+using Wasm3DotNet;
 
 namespace Wasm3DotNetDemo
 {

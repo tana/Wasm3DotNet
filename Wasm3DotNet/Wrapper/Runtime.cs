@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Wasm3DotNet.Wrapper
 {
@@ -52,6 +50,12 @@ namespace Wasm3DotNet.Wrapper
             }
 
             return new Function(funcHandle);
+        }
+
+        public IntPtr GetMemory(out uint memoryByteSize, uint memoryIndex = 0)
+        {
+            if (memoryIndex != 0) throw new Wasm3Exception("Only memory 0 supported currently");
+            return NativeFunctions.m3_GetMemory(Handle, out memoryByteSize, memoryIndex);
         }
     }
 }

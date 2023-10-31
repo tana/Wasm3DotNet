@@ -33,7 +33,7 @@ namespace Wasm3DotNet.Wrapper
             var result = NativeFunctions.m3_LinkRawFunction(Handle, moduleName, functionName, signature, function);
             if (result != null)
             {
-                new Wasm3Exception(result);
+                throw new Wasm3Exception(result);
             }
         }
     }
